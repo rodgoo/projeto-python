@@ -1,0 +1,11 @@
+n = input('Digite algo:')
+print('o tipo primitivo desse valor é',type(n))
+print('Somente espaços?', n.isspace())
+print('Númerico?',n.isnumeric())
+print('Alfabético?',n.isalpha())
+print('Alpha Númerico?',n.isalnum())
+print('Maíúsuculas?',n.isupper())
+print('Minúsculas?',n.islower())
+print('Capitalizada?',n.istitle())
+
+input('ENTER pra finalizar chefia')
