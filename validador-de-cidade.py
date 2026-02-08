@@ -12,7 +12,11 @@ else:
 # Valida se for a PRIMEIRA cidade que começa com Santo
 if validadorPrioridade == True :
     print('Sua cidade começa com: Santo, aprovado!')
+
 elif validaSanto == True:
     print('Sua cidade pode até conter Santo, porém, não no começo, reprovado!')
+
 else:
     print('Nada aqui foi atendido, tente novamente com outra cidade, desde que atenda aos critérios pedidos.')
+
+print(cidade)
