@@ -1,3 +1,6 @@
+import math
+
+numeroReal = float(input('Digite um número, pode ser quebrado:'))
 
 numeroInteiro = int(numeroReal)
 numeroInteiroBiblioteca = math.trunc(numeroReal)
