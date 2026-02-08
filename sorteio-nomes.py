@@ -1,16 +1,23 @@
 import random
 
-p1 = input('Digite o nome da pessoa 1:')
-p2 = input('Digite o nome da pessoa 2:')
-p3 = input('Digite o nome da pessoa 3:')
+p1 = input('Digite o nome do aluno 1:')
+p2 = input('Digite o nome do aluno 2:')
+p3 = input('Digite o nome do aluno 3:')
+p4 = input('Digite o nome do aluno 4:')
 
-sorteador = random.randint(1,3)
-print('Número sorteado:',sorteador)
+#Sorteador feito por Rodrigo (manualmente)
+sorteador = random.randint(1,4)
+print('O aluno escolhido foi:')
 if sorteador == 1:
     print(p1)
 if sorteador == 2:
     print(p2)
 if sorteador == 3:
     print(p3)
-else: print('Valor não disponível em tabela')
+if sorteador == 4:
+    print(p4)
 
+#Sorteador feito utilizando a biblioteca (random)
+lista = [p1,p2,p3, p4]
+escolher = random.choice(lista)
+print(f'O aluno escolhido foi: {escolher}')
