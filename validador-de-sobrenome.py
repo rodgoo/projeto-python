@@ -1,8 +1,8 @@
 sobrenome = input('Digite o seu nome completo: ')
 
-validador = ('Rodrigues' in sobrenome)
+validador = ('rodrigues' in sobrenome.lower())
 
 if validador == True:
-    print('Seu nome possui o sobrenome Rodrigues!')
+    print('Seu nome possui o sobrenome esperado: Rodrigues!')
 else:
-    print('Seu nome não possui o sobrenome Rodrigues. Tente novamente com outro nome.')
+    print('Seu nome não possui o sobrenome esperado. Tente novamente com outro nome.')
