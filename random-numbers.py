@@ -1,3 +1,5 @@
+#importa a biblioteca random
+import random
 
 # random gera um número aleatório entre 0 e 1 (float number por padrão)
 num = random.random()
