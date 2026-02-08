@@ -1,15 +1,12 @@
-nome = input('Digite o seu nome completo:')
+nome = input('Digite o seu nome completo:').strip()
 
-maisc = nome.upper()
-print('Letras se tornaram maiúsculas:',maisc)
+print('Letras se tornaram maiúsculas:',format(nome.upper()))
 
-mnsc = nome.lower()
-print('Letras se tornaram minúsculas:',mnsc)
+print('Letras se tornaram minúsculas:',format(nome.lower()))
 
 letrasPrimeiroNome = nome.split()[0]
 quantidadeLetrasPrimeiroNome = len(letrasPrimeiroNome)
 print('Número de letras no primeiro nome:',quantidadeLetrasPrimeiroNome)
 
 letras = len(nome.replace(" ", ""))
-print('Número de letras completas:',letras)
-
+print(f'Seu primeiro nome é {letrasPrimeiroNome} e o número de letras completas:',letras)
