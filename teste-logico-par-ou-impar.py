@@ -1,7 +1,7 @@
 comando = int(input('Digita um número e vou te falar se é par ou ímpar'))
+resultado = comando % 2
 
-
-if comando%2 == 0:
-    print('Par')
+if  resultado == 0:
+    print(f'Resultado de {comando} é {resultado}. Então é Par')
 else:
-    print('Impar')
+    print(f'Resultado de {comando} é {resultado}. Então é Impar')
