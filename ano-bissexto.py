@@ -6,5 +6,6 @@ if anoAtual == 0:
 
 if anoAtual % 4 == 0 and anoAtual % 100 !=0 or anoAtual % 400 == 0: #Fórmula condicional completa para verificar se o ano é ou não bissexto
     print(f'O ano {anoAtual} é bissexto!')
+
 else:
     print(f'O ano de {anoAtual} não é uma ano bissexto!')
