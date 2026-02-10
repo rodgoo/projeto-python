@@ -1,4 +1,4 @@
-import datetime
+import datetime # Importação de biblioteca remota
 
 idade = int(input('Olá, me fale seu ano de nascimento?'))
 anoNascimento = datetime.datetime.now().year - idade # Procura pela idade - o ano atual do computador
