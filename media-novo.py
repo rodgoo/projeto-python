@@ -9,8 +9,8 @@ media = print('A média encontrada foi de:',mediaCalculo)
 if mediaCalculo < 5.0:
     print('Reprovado')
 
-if mediaCalculo >= 5.0 and mediaCalculo <= 6.9:
+elif mediaCalculo >= 5.0 and mediaCalculo <= 6.9:
     print('Recuperação')
 
-if mediaCalculo > 7.0:
+elif mediaCalculo > 7.0:
     print('Aprovado')
