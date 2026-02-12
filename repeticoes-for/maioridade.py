@@ -10,7 +10,6 @@ for pessoas in range(1, 8):
 
     if idade >= 18:
         totalMaior += 1
-
     else:
         totalMenor += 1
 
