@@ -1,4 +1,4 @@
-frase = input('Digite uma frase para verifiar se ela é um palindromo: ').strip().upper()
+frase = input('Digite uma frase para verificar se ela é um palindromo: ').strip().upper()
 palavras = frase.split()
 juntar = ''.join(palavras)
 inverter = ''
