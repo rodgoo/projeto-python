@@ -35,6 +35,7 @@ while escolhaOpcao != 5:
         print('Escolha os números novamente')
         primeiroValor = int(input('Primeiro valor: '))
         segundoValor = int(input('Segundo valor: '))
+
     elif escolhaOpcao == 5:
         print('[LOGOFF] O programa está sendo finalizado...')
         sleep(1.2)
@@ -42,9 +43,10 @@ while escolhaOpcao != 5:
         sleep(1)
         print('[LOGOFF] Até logo!')
         sleep(.8)
+
     else:
         print('[AVISO] Opção invalida, tente novamente')
+
     print('=' * 40)
     sleep(2)
-print('='*40)
 print('[Sistema] FIM DO PROGRAMA')
