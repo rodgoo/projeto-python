@@ -23,4 +23,3 @@ while not acertou:
             print('[DICA] Faltam mais números')
         elif jogador > computador:
             print('[DICA] Menos números...')
-
