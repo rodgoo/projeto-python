@@ -5,7 +5,6 @@ while r == 'S':
 print('Você não quis continuar. Fim do programa. Obrigado por participar!')
 print('='*30)
 
-
 n=1
 par = impar = 0
 while n !=0:
