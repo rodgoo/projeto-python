@@ -1,11 +1,13 @@
-use cadastro_pessoas;
-CREATE table cadastro_pessoas (
-nome varchar(30),
-idade tinyint(3),
-sexo char(1),
-peso float,
-altura float,
-nacionalidade varchar(20)
-);
+USE cadastro_teste;
 
-describe cadastro_pessoas
+CREATE TABLE pessoas_teste (
+id int NOT NULL AUTO_INCREMENT,
+nome varchar(30) NOT NULL,
+nascimento date NOT NULL,
+sexo enum('M','F') NOT NULL,
+peso decimal(5,2),
+altura decimal(3,2),
+nacionalidade varchar(20) DEFAULT 'América',
+PRIMARY KEY (id)
+
+) DEFAULT CHARSET = UTF8,
