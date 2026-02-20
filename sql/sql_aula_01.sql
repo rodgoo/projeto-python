@@ -16,6 +16,6 @@ PRIMARY KEY (id)
 
 INSERT INTO loja_do_ryan.ryan_vendasa
 (nome, nascimento, sexo, peso, altura, nacionalidade) VALUES
-('Ryan','2005-03-24','F','70','1.80','Brasileiro')
+('Ryan','2005-03-24','M','80','1.80','Brasileiro')
 
 SELECT nome, sexo from ryan_vendasa
