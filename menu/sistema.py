@@ -20,7 +20,12 @@ while True:
         lerArquivo(arq)
     elif resposta == 2:
         print('-'*40)
-        print('OPÇÃO 02')
+        print('NOVO CADASTRO')
+
+        nome = input('Nome: ')
+        idade = leiaInt('Idade: ')
+        cadastrar(arq, nome, idade)
+
     elif resposta == 3:
         print('-'*40)
         print('Sistema sendo finalizado, até a próxima!')
