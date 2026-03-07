@@ -24,15 +24,12 @@ class MinhaClasse:
 
 # -------- DECLARAÇÃO DOS OBJETOS --------
 print('='*30)
-objeto0 = MinhaClasse("Rodrigo" ,16) #print(0)
+objeto0 = MinhaClasse("Rodrigo" ,16) #define o objeto (0)
 objeto0.aniversario()
 
 
-objeto1 = MinhaClasse("Pedro", 17) #print(1)
+objeto1 = MinhaClasse("Pedro", 17) #define o objeto (1)
 objeto1.aniversario()
-
-print(objeto0.__dict__)
-print(objeto0.__getstate__())
 
 print('='*30)
 
