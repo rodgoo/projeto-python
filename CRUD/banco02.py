@@ -20,40 +20,55 @@ def adicionarDado(nomeUsuario,documento,telefone):
 def listarDados():
     cursor.execute('SELECT * FROM cadastroCliente')
     dados = cursor.fetchall()
-    for dados in dados:
-        id,nomeUsuario,documento,telefone
+    for linha in dados:
+        id,nomeUsuario,documento,telefone = linha
         print(f"""
             ID: {id}
             Nome: {nomeUsuario}
             CPF: {documento}
             Contato: {telefone}
             """)
-        print('\n')
 
-def atualizarDadoNome(nomeUsuario):
+def atualizarDadoNome(nomeUsuario, id):
     cursor.execute("""
                    UPDATE cadastroCliente SET nomeUsuario = ?
                    WHERE id = ?
-                   """,(nomeUsuario))
+                   """,(nomeUsuario, id))
     conexao_banco.commit()
+    return cursor.rowcount > 0
 
-def atualizarDadoDocumento(documento):
+
+def atualizarDadoDocumento(documento, id):
+    cursor.execute("""
+                   UPDATE cadastroCliente SET documento = ?
+                   WHERE id = ?
+                   """,(documento, id))
+    conexao_banco.commit()
+    return cursor.rowcount > 0
+
+def atualizarDadoTelefone(telefone, id):
     cursor.execute("""
                    UPDATE cadastroCliente SET telefone = ?
                    WHERE id = ?
-                   """,(documento))
+                   """,(telefone, id))
     conexao_banco.commit()
+    return cursor.rowcount > 0
 
-def atualizarDadoTelefone(telefone):
+def atualizarTodosDados(nomeUsuario,documento,telefone, id):
     cursor.execute("""
-                   UPDATE cadastroCliente SET telefone = ?
-                   WHERE id = ?
-                   """,(telefone))
+                    UPDATE cadastroCliente SET nomeUsuario = ?,
+                    documento = ?,
+                    telefone = ? 
+                    WHERE id = ?
+                   """,(nomeUsuario,documento,telefone, id))
     conexao_banco.commit()
+    return cursor.rowcount > 0
 
 def deletarDado(nomeUsuario, id):
     cursor.execute('DELETE FROM cadastroCliente WHERE nomeUsuario = ? OR id = ?',(nomeUsuario,id,))
     conexao_banco.commit()
+    return cursor.rowcount > 0
+
 
 
 while True:
@@ -89,35 +104,59 @@ while True:
             # Injetando os dados no SQL
             adicionarDado(nomeUsuario,documento,telefone)
             print('Sucesso! Dado adicionado!')
+
+            sleep(1)
+            print(f'A tabela será mostrada em segundos, afim de exibir os novos valores')
+            sleep(3)
+
+            try:
+                listarDados()
         
+            except Exception as erro:
+                print('='*30)
+                print(f'Erro ao listar dados do banco, vê aí: {erro}')
+        
+        except sqlite3.IntegrityError:
+                print('Opa! Identificamos campos já existentes sendo cadastrados novamente')
+                print('Lembrando... Os Campos: documento, telefone precisam ser únicos!')
+
         except Exception as erro:
             print('='*30)
             print(f'Erro ao adicionar os dados no banco, dá uma olhada: {erro}')
-
-        except sqlite3.IntegrityError:
-            print('Opa! Identificado campos já existentes sendo cadastrados novamente')
-            print('Lembrando... Campos: documento, telefone precisam ser únicos!')
 
 
     # DELETE - Excluindo registros do banco de dados
     elif pergunta == 'excluir':
         print('='*30)
-        perguntaDelete = input('Digite o nome ou ID do usuário que deseja excluir:').capitalize()
+        print('Listando todos os usuários da tabela...:')
+        sleep(2)
+    
+        try:
+            listarDados()
+        
+        except Exception as erro:
+            print('='*30)
+            print(f'Erro ao listar dados do banco, vê aí: {erro}')
+
+        print('='*30)
+        apagarPessoa = input('Digite o nome ou ID do usuário que deseja excluir:').capitalize()
         print('='*30)
 
         try:
             # Deletando dados do SQL
-            deletarDado(nomeUsuario,id)
+            deletado = deletarDado(apagarPessoa.capitalize(),apagarPessoa)
             print('Dado excluído com sucesso!')
 
+            sleep(1)
+            print(f'A tabela será mostrada em segundos, afim de exibir os novos valores')
+            sleep(3)
 
-            if cursor.rowcount > 0:
-                print('Sucesso! dado excluído do banco de dados')
-                print(f'[{nomeUsuario} saiu do chat] | não existe mais!')
-                sleep(1.5)
-            else:
-                print(f'Opa! Esse dado: [{perguntaDelete}] não existe em sistema :/')
-                sleep(1)
+            try:
+                listarDados()
+        
+            except Exception as erro:
+                print('='*30)
+                print(f'Erro ao listar dados do banco, vê aí: {erro}')
         
         except Exception as erro:
             print('='*30)
@@ -125,11 +164,18 @@ while True:
 
     elif pergunta == 'listar':
         print('='*30)
-        print('Listando todos os usuários da tabela')
-    
+        print('Listando todos os usuários da tabela...:')
+        sleep(2)
+
+        cursor.execute('SELECT MAX(id) FROM cadastroCliente')
+        resultado = cursor.fetchone()[0]
+
+        if resultado is None:
+            print('O banco ainda está vazio, tente adicionar algum dado.')
+
         try:
-            listarDados(id,nomeUsuario,documento,telefone)
-            conexao_banco.commit()
+            listarDados()
+        
         except Exception as erro:
             print('='*30)
             print(f'Erro ao listar dados do banco, vê aí: {erro}')
@@ -137,31 +183,142 @@ while True:
 
     elif pergunta == 'atualizar':
         print('='*30)
-        perguntaPorId = input('Antes de prosseguirmos, me informe o ID da pessoa no qual alterarmos o(s) dado(s): ')
-
-
-        perguntaAtualizar = input('Digite o dado que deseja atualizar: [nome] [documento] [telefone] [todos]').capitalize()
-        
-        if perguntaAtualizar == 'Nome':
-            nomeAtualizado = input('Digite aqui o novo valor para nome: ')
-            atualizarDadoNome(nomeUsuario)
 
         try:
-            # Deletando dados do SQL
-            deletarDado(nomeUsuario,id)
-            print('Dado excluído com sucesso!')
-
-
-            if cursor.rowcount > 0:
-                print('Sucesso! dado atualizado no banco de dados')
-                sleep(1.5)
+            listarDados()
         
         except Exception as erro:
             print('='*30)
-            print(f'Erro ao excluir dados do banco, vê aí: {erro}')
-            
+            print(f'Erro ao listar dados do banco, vê aí: {erro}')
 
+        def verificandoID(id_digitado):
+            cursor.execute('SELECT MAX(id) FROM cadastroCliente')
+            resultado = cursor.fetchone()[0]
+
+            if resultado is None:
+                return False,'O banco ainda está vazio, tente adicionar algum dado!'
+            if id_digitado > resultado:
+                return False, f'O id {id_digitado} não existe! Maior registro {resultado}'
+            return True,''
+
+        # Faz a validação do ID para a alteração com o usuário
         print('='*30)
+        perguntaPorId = int(input('Antes de prosseguirmos, me informe o ID da pessoa no qual alteraremos o(s) dado(s): ').strip())
+        existente, msg = verificandoID(perguntaPorId)
+
+        if not existente:
+            print(msg)
+            continue
+
+        print('Digite o dado que deseja atualizar: [nome] [documento] [telefone] [tudo]')
+        perguntaAtualizar = input('O que deseja alterar? ').capitalize()
+       
+        # Alterando o nome
+        if perguntaAtualizar == 'Nome':         
+            nomeAtualizado = input('Digite aqui o novo valor para [nome]: ')
+
+            try: 
+                vinculandoId = atualizarDadoNome(nomeAtualizado, perguntaPorId)
+
+                if vinculandoId:
+                    print(f'Sucesso! Nome do id: {perguntaPorId} alterado!')
+                    sleep(1)
+                    print(f'A tabela será mostrada em segundos, afim de exibir os novos valores')
+                    sleep(3)
+
+                    try:
+                        listarDados()
+                
+                    except Exception as erro:
+                        print('='*30)
+                        print(f'Erro ao listar dados do banco, vê aí: {erro}')
+                else:
+                    print(f'Erro no banco! id: {perguntaPorId} não encontrado')
+
+            except Exception as erro:
+                print('='*30)
+                print(f'Erro ao alterar dados do banco, vê aí: {erro}')
+
+        # Alterando o documento
+        if perguntaAtualizar == 'Documento':         
+            documentoAtualizado = input('Digite aqui o novo valor para [documento] [valor único]: ')
+
+            try: 
+                vinculandoId = atualizarDadoDocumento(documentoAtualizado, perguntaPorId)
+
+                if vinculandoId:
+                    print(f'Sucesso! Documento do id: {perguntaPorId} alterado!')
+                    sleep(1)
+                    print(f'A tabela será mostrada em segundos, afim de exibir os novos valores')
+                    sleep(3)
+
+                    try:
+                        listarDados()
+                
+                    except Exception as erro:
+                        print('='*30)
+                        print(f'Erro ao listar dados do banco, vê aí: {erro}')
+                else:
+                    print(f'Erro no banco! id: {perguntaPorId} não encontrado')
+
+            except Exception as erro:
+                print('='*30)
+                print(f'Erro ao alterar dados do banco, vê aí: {erro}')
+
+        # Alterando o telefone
+        if perguntaAtualizar == 'Telefone':         
+            telefoneAtualizado = input('Digite aqui o novo valor para [telefone] [valor único]: ')
+
+            try: 
+                vinculandoId = atualizarDadoTelefone(telefoneAtualizado, perguntaPorId)
+
+                if vinculandoId:
+                    print(f'Sucesso! Telefone do id: {perguntaPorId} alterado!')
+                    sleep(1)
+                    print(f'A tabela será mostrada em segundos, afim de exibir os novos valores')
+                    sleep(3)
+
+                    try:
+                        listarDados()
+                
+                    except Exception as erro:
+                        print('='*30)
+                        print(f'Erro ao listar dados do banco, vê aí: {erro}')
+                else:
+                    print(f'Erro no banco! id: {perguntaPorId} não encontrado')
+
+            except Exception as erro:
+                print('='*30)
+                print(f'Erro ao alterar dados do banco, vê aí: {erro}')
+
+        # Alterando todos os dados
+        if perguntaAtualizar == 'Tudo':         
+            tudoAtualizadoNome = input('Digite aqui o novo valor para [nome]: ')
+            tudoAtualizadoDoc = input('Digite aqui o novo valor para [documento] [único]: ')
+            tudoAtualizadoTel = input('Digite aqui o novo valor para [telefone] [único]: ')
+
+            try: 
+                vinculandoId = atualizarTodosDados(tudoAtualizadoNome, tudoAtualizadoDoc, tudoAtualizadoTel, perguntaPorId)
+
+                if vinculandoId:
+                    print(f'Sucesso! Todos os dados do id: {perguntaPorId} alterados!')
+                    sleep(1)
+                    print(f'A tabela será mostrada em segundos, afim de exibir os novos valores')
+                    sleep(3)
+                    print('='*30)
+
+                    try:
+                        listarDados()
+                
+                    except Exception as erro:
+                        print('='*30)
+                        print(f'Erro ao listar dados do banco, vê aí: {erro}')
+                else:
+                    print(f'Erro no banco! id: {perguntaPorId} não encontrado')
+
+            except Exception as erro:
+                print('='*30)
+                print(f'Erro ao alterar dados do banco, vê aí: {erro}')
 
     else:
         print('Comando incorreto ou não reconhecido, tente novamente!')
