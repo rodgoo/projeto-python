@@ -69,8 +69,6 @@ def deletarDado(nomeUsuario, id):
     conexao_banco.commit()
     return cursor.rowcount > 0
 
-
-
 while True:
     print('='*30)
     print('Olá! Seja bem vind@!')
