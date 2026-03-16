@@ -16,18 +16,27 @@ while True:
     print('='*30)
     print('Olá! Seja bem vind@!')
     sleep(1)
-    print('Ações possíveis com os dados: [adicionar] [excluir] [listar pessoas] [sair]')
+    print('Ações possíveis com os dados: [adicionar] [excluir] [sair]')
     sleep(1.5)
     pergunta = input('O que deseja fazer? ')
 
     if pergunta == 'sair':
+        print('[sair] O programa está sendo finalizado, até mais!')
+        sleep(1)
         break
     
     # INSERT - Adicionando/Injetando/Alimentando dados no banco 
     elif pergunta == 'adicionar':
-        nomeUsuario = input('Digite o seu nome:').strip().capitalize()
+        print('='*30)
+        nomeUsuario = input('Digite o seu primeiro nome:').strip().capitalize()
+        
+        if not nomeUsuario.isalpha() or not nomeUsuario:
+            print('Este campo deve ser um texto, sem números ou caracteres especiais!')
+            continue
+
         print('='*30)
         documento = input('Digite o número do seu documento (fictício)').strip()
+
         print('='*30)
         telefone = input('Digite o número de seu telefone (fictício):')
         print('='*30)
@@ -40,6 +49,7 @@ while True:
             cursor.execute(dados_para_SQL,inserindoSQL)
             conexao_banco.commit()  
             print('Sucesso! Dados adicionados no banco de dados')
+            sleep(1.5)
         
         except Exception as erro:
             print('='*30)
@@ -48,6 +58,7 @@ while True:
 
     # DELETE - Excluindo registros do banco de dados
     elif pergunta == 'excluir':
+        print('='*30)
         perguntaDelete = input('Digite o nome ou ID do usuário que deseja excluir:').capitalize()
         print('='*30)
 
@@ -60,8 +71,10 @@ while True:
             if cursor.rowcount > 0:
                 print('Sucesso! dado excluído do banco de dados')
                 print(f'[{nomeUsuario} saiu do chat] | não existe mais!')
+                sleep(1.5)
             else:
                 print(f'Opa! Esse dado: [{perguntaDelete}] não existe em sistema :/')
+                sleep(1)
         
         except Exception as erro:
             print('='*30)
