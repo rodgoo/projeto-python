@@ -5,15 +5,16 @@ from time import sleep
 conexao_banco = sqlite3.connect('meuBanco.db')
 cursor = conexao_banco.cursor()
 
-# Criando a tabela
-cursor.execute("""CREATE TABLE IF NOT EXISTS cadastroCliente
-(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-nomeUsuario TEXT NOT NULL,               
-documento INTEGER NOT NULL UNIQUE,
-telefone INTEGER NOT NULL UNIQUE)""")
-
 #Definindo a regra de negócio
 def adicionarDado(nomeUsuario,documento,telefone):
+
+    # Criando a tabela
+    cursor.execute("""CREATE TABLE IF NOT EXISTS cadastroCliente
+    (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    nomeUsuario TEXT NOT NULL,               
+    documento INTEGER NOT NULL UNIQUE,
+    telefone INTEGER NOT NULL UNIQUE)""")
+
     cursor.execute('INSERT INTO cadastroCliente (nomeUsuario, documento, telefone) VALUES (?, ?, ?)',(nomeUsuario,documento,telefone))
     conexao_banco.commit()
 
@@ -69,23 +70,30 @@ def deletarDado(nomeUsuario, id):
     conexao_banco.commit()
     return cursor.rowcount > 0
 
+def deletarTudo(cadastroCliente):
+    cursor.execute('DELETE FROM cadastroCliente')
+    conexao_banco.commit()
+
+def deletarTabela(cadastroCliente):
+    cursor.execute('DROP TABLE cadastroCliente')
+    conexao_banco.commit()
+
 while True:
     print('='*30)
     print('Olá! Seja bem vind@!')
     sleep(1)
-    print('Ações possíveis com os dados: [adicionar] [excluir] [listar] [atualizar] [sair]')
-    sleep(1.5)
-    pergunta = input('O que deseja fazer? ')
+    print('Ações possíveis com os dados: [adicionar] [excluir] [listar] [atualizar] [deletar tabela] [sair]')
+    pergunta = input('O que deseja fazer? ').lower()
 
     if pergunta == 'sair':
-        print('[sair] O programa está sendo finalizado, até mais!')
+        print('Você optou por sair e o programa está sendo finalizado, até mais!')
         sleep(1)
         break
     
     # INSERT - Adicionando/Injetando/Alimentando dados no banco 
     elif pergunta == 'adicionar':
         print('='*30)
-        nomeUsuario = input('Digite o seu primeiro nome: ').strip().capitalize()
+        nomeUsuario = input('Digite o seu primeiro nome: ').capitalize()
         
         if not nomeUsuario.isalpha() or not nomeUsuario:
             print('Este campo deve ser um texto, sem números ou caracteres especiais!')
@@ -102,8 +110,8 @@ while True:
             # Injetando os dados no SQL
             adicionarDado(nomeUsuario,documento,telefone)
             print('Sucesso! Dado adicionado!')
+            sleep(1.5)
 
-            sleep(1)
             print(f'A tabela será mostrada em segundos, afim de exibir os novos valores')
             sleep(3)
 
@@ -116,7 +124,9 @@ while True:
         
         except sqlite3.IntegrityError:
                 print('Opa! Identificamos campos já existentes sendo cadastrados novamente')
-                print('Lembrando... Os Campos: documento, telefone precisam ser únicos!')
+                sleep(2.5)
+                print('Lembrando que os campos: [documento], [telefone] precisam ser únicos!')
+                sleep(2)
 
         except Exception as erro:
             print('='*30)
@@ -137,28 +147,61 @@ while True:
             print(f'Erro ao listar dados do banco, vê aí: {erro}')
 
         print('='*30)
-        apagarPessoa = input('Digite o nome ou ID do usuário que deseja excluir:').capitalize()
+        apagarPessoa = input('Digite o nome ou ID do usuário que deseja excluir ( [todos] deleta todos os dados, mantendo a tabela): ').capitalize()
         print('='*30)
 
-        try:
-            # Deletando dados do SQL
-            deletado = deletarDado(apagarPessoa.capitalize(),apagarPessoa)
-            print('Dado excluído com sucesso!')
+        if apagarPessoa == 'Todos':
+            try: 
+                apagandoTodosDados = deletarTudo(apagarPessoa.capitalize())
+                print('Todos os dados foram excluídos com sucesso!')
+            
+                sleep(1)
+                print(f'A tabela será mostrada em segundos, afim de exibir os novos valores')
+                sleep(3)
 
-            sleep(1)
-            print(f'A tabela será mostrada em segundos, afim de exibir os novos valores')
-            sleep(3)
+                cursor.execute('SELECT MAX(id) FROM cadastroCliente')
+                resultado = cursor.fetchone()[0]
 
-            try:
-                listarDados()
-        
+                if resultado is None:
+                    print('[BANCO VAZIO] O banco ainda está vazio, tente adicionar algum dado.')
+
+                try:
+                    listarDados()
+                
+                except Exception as erro:
+                    print('='*30)
+                    print(f'Erro ao listar dados do banco, vê aí: {erro}')
+            
             except Exception as erro:
                 print('='*30)
-                print(f'Erro ao listar dados do banco, vê aí: {erro}')
-        
-        except Exception as erro:
-            print('='*30)
-            print(f'Erro ao excluir dados do banco, vê aí: {erro}')
+                print(f'Erro ao apagar dados do banco, vê aí: {erro}')
+
+        else:
+            try:
+                # Deletando dados do SQL
+                deletado = deletarDado(apagarPessoa.capitalize(),apagarPessoa)
+                print('Dado excluído com sucesso!')
+
+                sleep(1)
+                print(f'A tabela será mostrada em segundos, afim de exibir os novos valores')
+                sleep(3)
+
+                cursor.execute('SELECT MAX(id) FROM cadastroCliente')
+                resultado = cursor.fetchone()[0]
+
+                if resultado is None:
+                    print('[BANCO VAZIO] O banco ainda está vazio, tente adicionar algum dado.')
+
+                try:
+                    listarDados()
+                
+                except Exception as erro:
+                    print('='*30)
+                    print(f'Erro ao listar dados do banco, vê aí: {erro}')
+
+            except Exception as erro:
+                    print('='*30)
+                    print(f'Erro ao deletar dado do banco, vê aí: {erro}')
 
     elif pergunta == 'listar':
         print('='*30)
@@ -169,7 +212,7 @@ while True:
         resultado = cursor.fetchone()[0]
 
         if resultado is None:
-            print('O banco ainda está vazio, tente adicionar algum dado.')
+            print('[BANCO VAZIO] O banco ainda está vazio, tente adicionar algum dado.')
 
         try:
             listarDados()
@@ -194,7 +237,7 @@ while True:
             resultado = cursor.fetchone()[0]
 
             if resultado is None:
-                return False,'O banco ainda está vazio, tente adicionar algum dado!'
+                return False,'[BANCO VAZIO] O banco ainda está vazio, tente adicionar algum dado.'
             if id_digitado > resultado:
                 return False, f'O id {id_digitado} não existe! Maior registro {resultado}'
             return True,''
@@ -317,6 +360,31 @@ while True:
             except Exception as erro:
                 print('='*30)
                 print(f'Erro ao alterar dados do banco, vê aí: {erro}')
+
+    elif pergunta == 'deletar tabela':
+        print('='*30)
+        print('[ÁREA DE RISCO] Esta ação deletará a [[TABELA]] e [[TODOS]] os seus dados contidos nela')
+        escolha = input('Deseja Prosseguir? [S] ou [N]: ').strip().upper()
+
+        if escolha not in 'SN':
+            print('Comando não reconhecido, responda com S ou N')
+            continue
+
+        if escolha == 'N':
+            print('Nenhuma ação foi tomada, volte para a tela inicial com segurança!')
+            sleep(2)
+            continue
+
+        if escolha == 'S':
+            print('A tabela e seus dados estão sendo deletados, aguarde um momento')
+            sleep(2)
+
+            try: 
+                pergunta = deletarTabela(pergunta.capitalize())
+                print('Todos os dados foram excluídos com sucesso!')
+            except Exception as erro:
+                print('='*30)
+                print(f'Erro ao deletar banco e seus dados, vê aí: {erro}')
 
     else:
         print('Comando incorreto ou não reconhecido, tente novamente!')
