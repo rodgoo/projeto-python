@@ -2,7 +2,7 @@ import sqlite3
 from time import sleep
 
 # Conectando banco de dados no código
-conexao_banco = sqlite3.connect('meuBanco.db')
+conexao_banco = sqlite3.connect("./databases/BancoDados.db")
 cursor = conexao_banco.cursor()
 
     #Definindo a regra de negócio
