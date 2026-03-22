@@ -142,6 +142,13 @@ while True:
         try:
             listarDados()
         
+        
+        except sqlite3.OperationalError as erroTabela:
+            if "no such table" in str(erroTabela):
+                print('='*30)
+                print(f'A tabela não foi encontrada | Provavelmente foi deletada')
+                continue
+
         except Exception as erro:
             print('='*30)
             print(f'Erro ao listar dados do banco, vê aí: {erro}')
@@ -221,6 +228,7 @@ while True:
             if "no such table" in str(erroTabela):
                 print('='*30)
                 print(f'A tabela não foi encontrada | Provavelmente foi deletada')
+                continue
 
         except Exception as erro:
             print('='*30)
@@ -232,9 +240,13 @@ while True:
 
         try:
             listarDados()
+
+        except sqlite3.OperationalError as erroTabela:
+            if "no such table" in str(erroTabela):
+                print(f'A tabela não foi encontrada | Provavelmente foi deletada')
+                continue
         
         except Exception as erro:
-            print('='*30)
             print(f'Erro ao listar dados do banco, vê aí: {erro}')
 
         def verificandoID(id_digitado):
@@ -386,7 +398,14 @@ while True:
 
             try: 
                 pergunta = deletarTabela(pergunta.capitalize())
-                print('Todos os dados foram excluídos com sucesso!')
+                print('A tabela e todos os seus dados foram excluídos com sucesso!')
+
+            except sqlite3.OperationalError as erroTabela:
+                if "no such table" in str(erroTabela):
+                    print('='*30)
+                    print(f'A tabela não foi encontrada | Provavelmente já foi deletada')
+                    continue
+
             except Exception as erro:
                 print('='*30)
                 print(f'Erro ao deletar banco e seus dados, vê aí: {erro}')
