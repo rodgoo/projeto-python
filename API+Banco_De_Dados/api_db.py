@@ -7,11 +7,12 @@ from datetime import datetime
 monitorMoedas = "monitorCriptomoedas.db"
 moeda = "bitcoin"
 
-# --- FUNÇÕES DE BANCO DE DADOS ---
+# --- FUNÇÕES DO BANCO DE DADOS ---
 def comecarFuncao():
     conn = sqlite3.connect(monitorMoedas)
     cursor = conn.cursor()
-    # Criamos a tabela com TIMESTAMP para análise temporal depois
+    
+    # Tabela criada com timestamp 
     cursor.execute(f'''
         CREATE TABLE IF NOT EXISTS historico_precos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -66,7 +67,7 @@ def menu():
             continue
 
         if escolha == 'BRL':
-            # --- FUNÇÃO DA API ---
+            # --- USANDO E PEGANDO A API ---
             def pegar_preco_atual(coin_id):
                 try:
                     url = f"https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies=brl"
@@ -89,7 +90,7 @@ def menu():
                         agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                         print(f'{agora} | {moeda.upper()} com o valor: R$: {preco_real} | Valor registrado no banco de dados!')
                     
-                    # Espera 60 segundos para a próxima consulta (evita bloqueio da API)
+                    # Espera 60 segundos para a próxima consulta (evitando bloqueio da API)
                         time.sleep(60) 
 
             except KeyboardInterrupt:
@@ -100,7 +101,7 @@ def menu():
                 print(f'Um erro foi encontrado! ERRO: {erro}')
                 
         elif escolha == 'USD':
-            # --- FUNÇÃO DA API ---
+            # --- USANDO E PEGANDO A API ---
             def pegar_preco_atual(coin_id):
                 try:
                     url = f"https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies=usd"
@@ -111,7 +112,7 @@ def menu():
                     print(f"Erro na API: {e}")
                     return None
 
-            # --- LOOP DE EXECUÇÃO ---
+            # --- COMANDO DE EXECUÇÃO ---
             print('-'*30)
             print("🚀 Monitor iniciado em [USD]: Dólar! Pressione Ctrl+C para parar.")
             
@@ -122,7 +123,7 @@ def menu():
                         salvar_precoDolar(moeda, preco_dolar)
                         agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                         print(f'{agora} | {moeda.upper()} com o valor: U$: {preco_dolar} | Valor registrado no banco de dados!')
-                    # Espera 60 segundos para a próxima consulta (evita bloqueio da API)
+                    # Espera 60 segundos para a próxima consulta (evitando bloqueio da API)
                     time.sleep(60) 
 
             except KeyboardInterrupt:
