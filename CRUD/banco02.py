@@ -7,7 +7,6 @@ cursor = conexao_banco.cursor()
 
     #Definindo a regra de negócio
 def adicionarDado(nomeUsuario,documento,telefone):
-    try:
         # Criando a tabela
         cursor.execute("""CREATE TABLE IF NOT EXISTS cadastroCliente
         (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -17,9 +16,6 @@ def adicionarDado(nomeUsuario,documento,telefone):
 
         cursor.execute('INSERT INTO cadastroCliente (nomeUsuario, documento, telefone) VALUES (?, ?, ?)',(nomeUsuario,documento,telefone))
         conexao_banco.commit()
-
-    except erro as Erro:
-        print(f'Erro ao conectar no banco de dados, vê aí: {erro}')
 
 
 def listarDados():
@@ -212,15 +208,20 @@ while True:
         print('Listando todos os usuários da tabela...:')
         sleep(2)
 
-        cursor.execute('SELECT MAX(id) FROM cadastroCliente')
-        resultado = cursor.fetchone()[0]
-
-        if resultado is None:
-            print('[BANCO VAZIO] O banco ainda está vazio, tente adicionar algum dado.')
 
         try:
             listarDados()
-        
+            cursor.execute('SELECT MAX(id) FROM cadastroCliente')
+            resultado = cursor.fetchone()[0]    
+            
+            if resultado is None or resultado == 0:
+                print('[BANCO VAZIO] O banco ainda está vazio, tente adicionar algum dado.')
+
+        except sqlite3.OperationalError as erroTabela:
+            if "no such table" in str(erroTabela):
+                print('='*30)
+                print(f'A tabela não foi encontrada | Provavelmente foi deletada')
+
         except Exception as erro:
             print('='*30)
             print(f'Erro ao listar dados do banco, vê aí: {erro}')
