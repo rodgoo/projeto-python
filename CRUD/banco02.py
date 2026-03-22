@@ -5,18 +5,22 @@ from time import sleep
 conexao_banco = sqlite3.connect('meuBanco.db')
 cursor = conexao_banco.cursor()
 
-#Definindo a regra de negócio
+    #Definindo a regra de negócio
 def adicionarDado(nomeUsuario,documento,telefone):
+    try:
+        # Criando a tabela
+        cursor.execute("""CREATE TABLE IF NOT EXISTS cadastroCliente
+        (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        nomeUsuario TEXT NOT NULL,               
+        documento INTEGER NOT NULL UNIQUE,
+        telefone INTEGER NOT NULL UNIQUE)""")
 
-    # Criando a tabela
-    cursor.execute("""CREATE TABLE IF NOT EXISTS cadastroCliente
-    (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    nomeUsuario TEXT NOT NULL,               
-    documento INTEGER NOT NULL UNIQUE,
-    telefone INTEGER NOT NULL UNIQUE)""")
+        cursor.execute('INSERT INTO cadastroCliente (nomeUsuario, documento, telefone) VALUES (?, ?, ?)',(nomeUsuario,documento,telefone))
+        conexao_banco.commit()
 
-    cursor.execute('INSERT INTO cadastroCliente (nomeUsuario, documento, telefone) VALUES (?, ?, ?)',(nomeUsuario,documento,telefone))
-    conexao_banco.commit()
+    except erro as Erro:
+        print(f'Erro ao conectar no banco de dados, vê aí: {erro}')
+
 
 def listarDados():
     cursor.execute('SELECT * FROM cadastroCliente')
