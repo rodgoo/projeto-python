@@ -41,9 +41,9 @@ def salvar_Preco(moeda, tipomoeda, preco):
 def menu():
 
     while True: 
-        print('-'*30)
-        print('Sistema de Monitoramento')
-        print('-'*30)
+        print('-'*50)
+        print('Sistema de Monitoramento | Atualiza a cada minuto')
+        print('-'*50)
 
         # Dicionário contendo as informações das moedas
         informacoes_moedas = {
