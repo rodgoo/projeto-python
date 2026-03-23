@@ -3,9 +3,9 @@ import sqlite3
 import time
 from datetime import datetime
 
-# --- CONFIGURAÇÕES ---
+# --- CONFIGURANDO O BANCO DE DADOS ---
 monitorMoedas = "./databases/monitorMoedas.db"
-moeda = "bitcoin"
+
 
 # --- FUNÇÕES DO BANCO DE DADOS ---
 def comecarFuncao():
@@ -44,11 +44,37 @@ def menu():
         print('-'*30)
         print('Sistema de Monitoramento')
         print('-'*30)
-        escolha = input('Qual o tipo de moeda? [BRL] ou [USD]: ').lower()
+
+        # Dicionário contendo as informações das moedas
+        informacoes_moedas = {
+            'brl': {'nome': 'Real', 'simbolo': 'R$'},
+            'usd': {'nome': 'Dolar', 'simbolo': 'US$'},
+            'eur': {'nome': 'Euro', 'simbolo': '€'},
+            'gbp': {'nome': 'Libra', 'simbolo': '£'}
+        }
+
+        # Perguntando ao usuário a moeda desejada
+        moeda = input('Digite um tipo de moeda (bitcoin, ethereum , solana, cardano): ')
+        escolha = input("Digite a moeda (brl, usd, eur): ").lower()
+
+        # Atribuindo as variáveis dinamicamente
+        # O método .get() evita que o código quebre se o usuário digitar algo que não existe
+        dados = informacoes_moedas.get(escolha, {'nome': 'Desconhecida', 'simbolo': '?'})
+
+        # Atribuindo nome e símbolo para as moedas desejadas reconhecidas na lista
+        moedaNomeExtended = dados['nome']
+        moedaExtensao = dados['simbolo']
         comecarFuncao()
 
-        if escolha not in ['brl', 'usd']:
-            print('Opção não reconhecida. Escolha BRL ou USD para começar!')
+        # Caso nenhuma das opções DE VALORES sejam reconhecidas na lista
+        if escolha not in ['brl', 'usd', 'eur', 'gbp',]:
+            print('Opção não reconhecida. Escolha [brl], [usd], [eur], ou [gbp] para começar!')
+            time.sleep(1.5)
+            continue
+
+        # Caso nenhuma das opções DE MOEDAS sejam reconhecidas na lista
+        if moeda not in ['bitcoin', 'ethereum', 'solana', 'cardano', '11am']:
+            print('Moeda não reconhecida. Escolha [bitcoin], [ethereum], [solana], ou [cardana] para começar!')
             time.sleep(1.5)
             continue
 
@@ -64,13 +90,11 @@ def menu():
                 print(f"Erro na API: {e}")
                 return None
             
-            
+        
+
+        print(f"Moeda selecionada: {moedaNomeExtended} ({moedaExtensao})")          
         print('-'*30)
-
-        moedaNomeExtended = 'Real' if escolha == 'brl' else 'Dolar'
-        moedaExtensao = 'R$' if escolha == 'brl' else 'US$'
-
-        print(f"🚀 Monitor iniciado em [{escolha.upper()}]: {moedaNomeExtended} | Pressione Ctrl+C para parar.")
+        print(f"🚀 Monitor iniciado em [{escolha.upper()}: {moedaNomeExtended}] | [{moeda.upper()}] | Pressione Ctrl+C para parar.")
         
 
         try:
