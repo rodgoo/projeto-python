@@ -28,7 +28,7 @@ def comecarFuncao():
 def salvar_Preco(moeda, tipomoeda, preco):
     conn = sqlite3.connect(monitorMoedas)
     cursor = conn.cursor()
-    horaAgora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    horaAgora = datetime.now().strftime('%Y-%m-%d %H:%M')
     
     cursor.execute('''
         INSERT INTO historico_precos (moeda, tipomoeda, preco, data_hora)
@@ -102,7 +102,7 @@ def menu():
                 preco = pegar_preco_atual(moeda)
                 if preco:
                     salvar_Preco(moeda, moedaNomeExtended, preco)
-                    agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    agora = datetime.now().strftime('%Y-%m-%d %H:%M')
                     print(f'{agora} | {moeda.upper()} com o valor: {moedaExtensao}: {preco} | Valor registrado no banco de dados!')
                 
                 # Espera 60 segundos para a próxima consulta (evitando bloqueio da API)
